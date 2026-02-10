@@ -1,0 +1,339 @@
+import React, { useState } from 'react';
+import { 
+  Wind, 
+  ShieldCheck, 
+  MapPin, 
+  Users, 
+  ArrowRight, 
+  Waves, 
+  Navigation, 
+  CheckCircle2,
+  Calendar,
+  MessageCircle,
+  ChevronDown,
+  Info,
+  Play,
+  Instagram,
+  Facebook,
+  Mail,
+  Phone,
+  Camera
+} from 'lucide-react';
+
+/**
+ * Símbolo QK (Quilmes Kitesurf)
+ * Diseño con gap de 2px exactos y estilo "Interlocked" corregido.
+ */
+const QKSymbol = ({ light = false, className = "" }) => {
+  const primary = light ? '#FFFFFF' : '#1A1A1A';
+  const accent = '#D4AF37';
+  
+  const borderStyle = light 
+    ? { textShadow: '1.5px 1.5px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000' }
+    : {};
+
+  return (
+    <div className={`relative flex items-center justify-center ${className}`}>
+      <div className="flex items-center justify-center gap-[2px] z-10">
+        <span style={{ color: primary, ...borderStyle }} className="text-4xl font-black italic tracking-tighter leading-none select-none">Q</span>
+        <span style={{ color: accent }} className="text-4xl font-black tracking-tighter leading-none select-none">K</span>
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+         <div className="w-24 h-[1.5px] rotate-[-40deg] opacity-40" style={{ backgroundColor: light ? '#000' : '#FFF' }}></div>
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  const [activeFaq, setActiveFaq] = useState(null);
+
+  // Imágenes de alta calidad para la demo (Unsplash)
+  const imgDemo = {
+    hero: "https://images.unsplash.com/photo-1544391682-445027ff0c17?q=80&w=1200&auto=format&fit=crop",
+    surf1: "https://images.unsplash.com/photo-1500964757637-c85e8a162699?q=80&w=800&auto=format&fit=crop",
+    surf2: "https://images.unsplash.com/photo-1505634568-30156730768c?q=80&w=800&auto=format&fit=crop",
+    club: "https://images.unsplash.com/photo-1517176118179-65244903d13c?q=80&w=800&auto=format&fit=crop",
+    gear: "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=800&auto=format&fit=crop"
+  };
+
+  const cursos = [
+    {
+      titulo: "Bautismo",
+      precio: "$XX.XXX",
+      descripcion: "Tu primer contacto con el kite. Ideal para sacarte las dudas y sentir la tracción del viento.",
+      duracion: "2 horas",
+      puntos: ["Teoría de seguridad", "Control de kite en tierra", "Primeros ingresos al agua"]
+    },
+    {
+      titulo: "Curso Completo",
+      precio: "$XX.XXX",
+      descripcion: "El camino hacia la autonomía. Te enseñamos todo lo que necesitás para navegar solo.",
+      duracion: "9 horas (3 clases)",
+      puntos: ["Bodydrag completo", "Waterstart (primeros metros)", "Reglas de preferencia", "Navegación en ambos sentidos"]
+    },
+    {
+      titulo: "Perfeccionamiento",
+      precio: "$XX.XXX",
+      descripcion: "Para quienes ya navegan y quieren mejorar su postura, ceñida o aprender sus primeros saltos.",
+      duracion: "A medida",
+      puntos: ["Optimización de ceñida", "Transiciones", "Introducción al salto", "Navegación en Switch"]
+    }
+  ];
+
+  const faqs = [
+    { q: "¿Necesito tener equipo propio?", a: "No, en Quilmes Kitesurf proveemos todo el equipo necesario: kites de última generación, tablas, arneses, chalecos, cascos y radios de comunicación." },
+    { q: "¿Es necesario estar en buen estado físico?", a: "No se requiere una condición atlética especial. El kitesurf se trata de técnica y control, no de fuerza bruta. Si podés caminar y nadar un poco, podés aprender." },
+    { q: "¿Cuál es la mejor edad para empezar?", a: "Enseñamos a adultos de todas las edades. Nuestro público principal es de 25 a 55 años. Lo más importante es tener ganas de aprender y disfrutar el río." }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-[#1A1A1A] selection:bg-[#D4AF37] selection:text-black">
+      {/* Navegación */}
+      <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <QKSymbol className="scale-75" />
+            <div className="hidden md:block">
+              <span className="block text-sm font-black italic leading-none uppercase tracking-tighter">Quilmes</span>
+              <span className="block text-[10px] font-bold tracking-[0.3em] text-[#D4AF37] uppercase">Kitesurf</span>
+            </div>
+          </div>
+          <div className="hidden md:flex gap-8 text-[11px] font-black uppercase tracking-widest">
+            <a href="#proceso" className="hover:text-[#D4AF37] transition-colors">Proceso</a>
+            <a href="#cursos" className="hover:text-[#D4AF37] transition-colors">Cursos</a>
+            <a href="#galeria" className="hover:text-[#D4AF37] transition-colors">Galería</a>
+          </div>
+          <button className="bg-[#1A1A1A] text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-[#D4AF37] hover:text-black transition-all">
+            <MessageCircle size={14} /> Reservar Clase
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+          <div className="z-10 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 text-slate-500">
+              <Navigation size={12} className="text-[#D4AF37]" /> Sede oficial en RioHaus Club
+            </div>
+            <h1 className="text-6xl md:text-8xl xl:text-[7rem] font-black italic tracking-tighter leading-[0.85] mb-8">
+              APRENDÉ <br />A TU RITMO.
+            </h1>
+            <p className="text-xl text-slate-500 mb-12 max-w-md font-medium leading-relaxed">
+              Enseñamos Kitesurf en la Ribera de Quilmes con un enfoque real: seguridad, paciencia y equipamiento de última generación.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="#cursos" className="bg-[#D4AF37] text-black px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-xl shadow-[#D4AF37]/20 hover:scale-105 transition-all">
+                Ver Cursos <ArrowRight size={16} />
+              </a>
+              <button className="border-2 border-slate-200 px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                Conocé el Spot
+              </button>
+            </div>
+          </div>
+          <div className="relative animate-in fade-in zoom-in duration-1000">
+            <div className="aspect-[4/5] bg-slate-100 rounded-[60px] overflow-hidden relative shadow-2xl">
+              <img 
+                src={imgDemo.hero} 
+                alt="Instructor de kitesurf" 
+                className="w-full h-full object-cover grayscale"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 hover:scale-110 transition-transform cursor-pointer group">
+                   <Play fill="white" className="text-white ml-1 group-hover:text-[#D4AF37] transition-colors" />
+                 </div>
+              </div>
+            </div>
+            <div className="absolute -bottom-10 -left-10 bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100 max-w-[280px]">
+              <div className="flex gap-1 text-[#D4AF37] mb-4">
+                {[...Array(5)].map((_, i) => <CheckCircle2 key={i} size={18} fill="currentColor" strokeWidth={0} />)}
+              </div>
+              <p className="text-sm font-bold leading-relaxed text-slate-800">"Excelente pedagogía. Me sentí seguro desde el primer momento."</p>
+              <div className="mt-4 flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                 <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Juan M., Alumno</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Galería Visual */}
+      <section className="py-32 bg-slate-50" id="galeria">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-20 text-center">
+            <h2 className="text-5xl font-black italic tracking-tighter uppercase">Nuestra Galería</h2>
+            <p className="text-slate-400 font-bold uppercase tracking-widest mt-4">La experiencia real en la ribera</p>
+            <div className="h-1.5 w-12 bg-[#D4AF37] mx-auto mt-6"></div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[imgDemo.hero, imgDemo.surf1, imgDemo.club, imgDemo.gear].map((img, idx) => (
+              <div key={idx} className="aspect-square bg-white rounded-[40px] overflow-hidden relative group shadow-lg border-4 border-white">
+                <img 
+                  src={img} 
+                  alt="Galería Quilmes Kite" 
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                  <Camera className="text-white" size={32} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pilares de confianza */}
+      <section className="py-24" id="proceso">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-16 text-center md:text-left">
+            <div className="space-y-6">
+              <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center shadow-sm text-[#D4AF37] mx-auto md:mx-0">
+                <ShieldCheck size={32} />
+              </div>
+              <h3 className="text-2xl font-black uppercase italic tracking-tighter">Seguridad Total</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Equipos 2024 con sistemas de eyección redundantes. Cascos con comunicación por radio BB Talkin'.</p>
+            </div>
+            <div className="space-y-6">
+              <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center shadow-sm text-[#D4AF37] mx-auto md:mx-0">
+                <Users size={32} />
+              </div>
+              <h3 className="text-2xl font-black uppercase italic tracking-tighter">Público Adulto</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Nuestra escuela está pensada para adultos que buscan un hobby seguro y profesional.</p>
+            </div>
+            <div className="space-y-6">
+              <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center shadow-sm text-[#D4AF37] mx-auto md:mx-0">
+                <Waves size={32} />
+              </div>
+              <h3 className="text-2xl font-black uppercase italic tracking-tighter">Spot Privilegiado</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Navegamos en la Ribera de Quilmes. Aguas bajas y vientos constantes NE y SE.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cursos */}
+      <section className="py-32 bg-white" id="cursos">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-16 flex justify-between items-end">
+            <div>
+              <h2 className="text-5xl font-black italic tracking-tighter uppercase">Nuestros Cursos</h2>
+              <div className="h-1.5 w-20 bg-[#D4AF37] mt-4"></div>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {cursos.map((curso, idx) => (
+              <div key={idx} className="bg-slate-50 border border-slate-100 rounded-[50px] p-10 shadow-sm hover:shadow-xl hover:bg-white transition-all group">
+                <div className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37] mb-6">Módulo {idx + 1}</div>
+                <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-6 leading-none">{curso.titulo}</h3>
+                <p className="text-slate-500 text-sm font-medium mb-10 leading-relaxed">{curso.descripcion}</p>
+                <ul className="space-y-4 mb-12">
+                  {curso.puntos.map((p, i) => (
+                    <li key={i} className="flex items-start gap-3 text-xs font-bold text-slate-700">
+                      <CheckCircle2 size={16} className="text-[#D4AF37] shrink-0" /> {p}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-auto pt-8 border-t border-slate-200 flex items-center justify-between">
+                   <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{curso.duracion}</div>
+                   <button className="text-[#1A1A1A] font-black text-[10px] uppercase tracking-widest flex items-center gap-2 group-hover:text-[#D4AF37] transition-colors">
+                     Info <ArrowRight size={14} />
+                   </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-32 bg-[#1A1A1A] text-white overflow-hidden relative" id="faq">
+        <div className="absolute top-0 right-0 opacity-10 translate-x-1/4 -translate-y-1/4">
+          <QKSymbol light className="scale-[6]" />
+        </div>
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">Preguntas Frecuentes</h2>
+            <p className="text-white/40 font-bold uppercase tracking-widest text-xs">Todo lo que necesitás saber antes de entrar al agua</p>
+          </div>
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+              <div key={idx} className="bg-white/5 border border-white/10 rounded-[32px] overflow-hidden">
+                <button 
+                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                  className="w-full p-8 flex items-center justify-between text-left hover:bg-white/10 transition-colors"
+                >
+                  <span className="font-bold text-lg pr-8">{faq.q}</span>
+                  <ChevronDown className={`transition-transform duration-500 shrink-0 ${activeFaq === idx ? 'rotate-180 text-[#D4AF37]' : ''}`} />
+                </button>
+                <div className={`transition-all duration-500 ease-in-out ${activeFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+                  <p className="p-8 pt-0 text-white/50 leading-relaxed font-medium border-t border-white/5 mt-4 pt-4">
+                    {faq.a}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="pt-32 pb-12 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+            <div className="lg:col-span-2">
+               <QKSymbol className="mb-8 scale-90 origin-left" />
+               <h3 className="text-2xl font-black italic tracking-tighter mb-6 uppercase">Quilmes Kitesurf</h3>
+               <p className="text-slate-400 max-w-sm font-medium leading-relaxed italic">
+                 "El río es nuestro, el viento es tuyo."
+               </p>
+               <div className="mt-8 flex gap-4">
+                  <a href="#" className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-all"><Instagram size={20} /></a>
+                  <a href="#" className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-all"><Facebook size={20} /></a>
+               </div>
+            </div>
+            <div>
+              <h4 className="font-black uppercase tracking-widest text-[10px] mb-8 text-slate-300">Contacto</h4>
+              <ul className="space-y-6">
+                <li className="flex items-center gap-4 text-sm font-bold">
+                  <Phone size={18} className="text-[#D4AF37]" /> +54 9 11 XXXX-XXXX
+                </li>
+                <li className="flex items-center gap-4 text-sm font-bold">
+                  <Mail size={18} className="text-[#D4AF37]" /> hola@quilmeskite.com
+                </li>
+                <li className="flex items-start gap-4 text-sm font-bold leading-tight">
+                  <MapPin size={18} className="text-[#D4AF37]" /> Av. Cervantes, <br /> Ribera de Quilmes
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black uppercase tracking-widest text-[10px] mb-8 text-slate-300">Sede RioHaus</h4>
+              <div className="aspect-video bg-slate-100 rounded-3xl overflow-hidden relative grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer border border-slate-200">
+                 <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black uppercase tracking-widest text-slate-400 text-center px-4">Ubicación protegida <br/> Click para abrir Maps</div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
+             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">© 2024 Quilmes Kitesurf // RioHaus System</p>
+             <div className="flex gap-10 text-[10px] font-black uppercase tracking-widest text-slate-300">
+                <a href="#" className="hover:text-black transition-colors">Privacidad</a>
+                <a href="#" className="hover:text-black transition-colors">Términos</a>
+             </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* WhatsApp Button */}
+      <a 
+        href="https://wa.me/54911xxxxxxxx" 
+        target="_blank" 
+        className="fixed bottom-8 right-8 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 flex items-center gap-3 group"
+      >
+        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-black uppercase tracking-widest text-[9px] whitespace-nowrap">Chateá con un instructor</span>
+        <MessageCircle size={24} />
+      </a>
+    </div>
+  );
+}
