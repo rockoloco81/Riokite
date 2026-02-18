@@ -9,18 +9,28 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Core para máxima estabilidad -->
+    <!-- Lucide Core para estabilidad de iconos -->
     <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,900;1,900&display=swap');
+        
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .font-black-italic { font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; }
+        
+        /* Tipografía para Títulos - Italic */
+        .font-black-italic { 
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: 900; 
+            font-style: italic; 
+        }
+        
         input[type=range]::-webkit-slider-thumb { 
             -webkit-appearance: none; height: 24px; width: 24px; 
             border-radius: 50%; background: #2563eb; cursor: pointer; 
             border: 4px solid white; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); 
         }
+        
         .icon-container svg { width: inherit; height: inherit; stroke-width: 2px; }
+        
         .grayscale-hover { 
             filter: grayscale(100%); 
             transition: filter 0.5s ease, transform 0.5s ease; 
@@ -28,6 +38,12 @@
         .grayscale-hover:hover { 
             filter: grayscale(0%); 
             transform: scale(1.02); 
+        }
+
+        .logo-symbol {
+            display: flex;
+            align-items: center;
+            gap: 2px;
         }
     </style>
 </head>
@@ -37,7 +53,7 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // --- COMPONENTE DE ICONO SEGURO ---
+        // --- COMPONENTE DE ICONO ---
         const Icon = ({ name, size = 24, className = "" }) => {
             useEffect(() => {
                 if (window.lucide) window.lucide.createIcons();
@@ -48,6 +64,23 @@
                 </span>
             );
         };
+
+        // --- COMPONENTE DE LOGO SVG (Pata Recta Garantizada) ---
+        const QKSymbol = ({ className = "h-10", colorQ = "currentColor", colorK = "#2563eb" }) => (
+            <svg viewBox="0 0 100 50" className={className} xmlns="http://www.w3.org/2000/svg">
+                {/* Letra Q */}
+                <g fill="none" stroke={colorQ} strokeWidth="12" strokeLinecap="square">
+                    <circle cx="25" cy="25" r="18" />
+                    <line x1="36" y1="36" x2="48" y2="48" />
+                </g>
+                {/* Letra K */}
+                <g fill="none" stroke={colorK} strokeWidth="12" strokeLinecap="square">
+                    <line x1="60" y1="7" x2="60" y2="43" />
+                    <line x1="60" y1="25" x2="85" y2="7" />
+                    <line x1="68" y1="20" x2="85" y2="43" />
+                </g>
+            </svg>
+        );
 
         // --- DATA DE LA ESCUELA ---
         const CURSOS = [
@@ -63,14 +96,14 @@
                 nivel: "Nivel 1+2",
                 descripcion: "El camino hacia la autonomía. Te enseñamos todo lo necesario para navegar solo.",
                 duracion: "9 horas (3 clases)",
-                puntos: ["Bodydrag", "Waterstart", "Reglas de preferencia", "Navegación"]
+                puntos: ["Bodydrag completo", "Waterstart (primeros metros)", "Reglas de preferencia", "Navegación autónoma"]
             },
             {
                 titulo: "Perfeccionamiento",
                 nivel: "Nivel Pro",
                 descripcion: "Para quienes ya navegan y quieren mejorar su postura, ceñida o aprender saltos.",
                 duracion: "A medida",
-                puntos: ["Optimización de ceñida", "Transiciones", "Primeros saltos"]
+                puntos: ["Optimización de ceñida", "Transiciones", "Introducción al salto"]
             }
         ];
 
@@ -98,7 +131,8 @@
             const [model, setModel] = useState("Switchblade");
             const [activeFaq, setActiveFaq] = useState(null);
             
-            const whatsappLink = "https://wa.me/54911xxxxxxxx";
+            const whatsappLink = "https://wa.me/5491133550302";
+            const IG_LINK = "https://www.instagram.com/riohaus.club/";
 
             useEffect(() => {
                 const models = Object.keys(BRANDS_DATA[brand] || {});
@@ -118,14 +152,11 @@
             return (
                 <div className="min-h-screen">
                     {/* Navegación */}
-                    <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 h-20 flex items-center px-6">
+                    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 h-20 flex items-center px-6">
                         <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center space-x-[2px]">
-                                    <span className="text-3xl font-black-italic italic tracking-tighter">Q</span>
-                                    <span className="text-3xl font-black-italic italic tracking-tighter text-blue-600">K</span>
-                                </div>
-                                <div className="hidden lg:block leading-none ml-2">
+                                <QKSymbol className="h-10 w-20" colorQ="#1e293b" />
+                                <div className="hidden lg:block leading-none ml-1">
                                     <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Quilmes Kite</span>
                                     <span className="block text-[8px] font-bold text-blue-600 uppercase tracking-[0.3em]">Escuela</span>
                                 </div>
@@ -146,20 +177,20 @@
                     {/* Hero */}
                     <section className="pt-40 pb-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
                         <div className="animate-in fade-in slide-in-from-left duration-700">
-                            <a href="https://www.instagram.com/riohaus.club/" target="_blank" className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 hover:bg-blue-100 transition-colors group">
+                            <a href={IG_LINK} target="_blank" className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 hover:bg-blue-100 transition-colors group">
                                 <Icon name="instagram" size={14} className="group-hover:scale-110 transition-transform" />
                                 Sede oficial: RioHaus Club
                             </a>
                             <h1 className="text-6xl md:text-8xl font-black-italic tracking-tighter leading-[0.85] mb-8 uppercase italic">APRENDÉ <br /><span className="text-blue-600">A TU RITMO.</span></h1>
                             <p className="text-xl text-slate-500 mb-12 max-w-md font-medium leading-relaxed">
-                                Clases personalizadas y en grupos desde 40 kg. Equipos de última generación, seguridad y profesionalismo en cada sesión.
+                                Clases personalizadas y en grupos; desde +40 kilos. Equipos de última generación, seguridad y Profesionalismo en cada sesión.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <a href="#cursos" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-xl shadow-blue-200 hover:scale-105 transition-transform">
                                     Ver Cursos <Icon name="arrow-right" size={16}/>
                                 </a>
                                 <a href="#calculadora" className="border-2 border-slate-200 px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-slate-50 text-center flex items-center justify-center gap-2 group italic">
-                                    ¿Qué armo? <Icon name="wind" size={14} className="group-hover:rotate-12 transition-transform" />
+                                    ¿Qué armo? <Icon name="wind" size={14} />
                                 </a>
                             </div>
                         </div>
@@ -180,11 +211,11 @@
                             </div>
                             <div className="grid md:grid-cols-3 gap-8">
                                 {CURSOS.map((curso, idx) => (
-                                    <div key={idx} className="bg-slate-50 border border-slate-100 rounded-[50px] p-10 shadow-sm hover:shadow-xl transition-all group">
+                                    <div key={idx} className="bg-slate-50 border border-slate-100 rounded-[50px] p-10 shadow-sm hover:shadow-xl transition-all group h-full flex flex-col">
                                         <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-6">{curso.nivel}</div>
                                         <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-6 leading-none">{curso.titulo}</h3>
                                         <p className="text-slate-500 text-sm font-medium mb-10 leading-relaxed">{curso.descripcion}</p>
-                                        <ul className="space-y-4 mb-12">
+                                        <ul className="space-y-4 mb-12 flex-grow">
                                             {curso.puntos.map((p, i) => (
                                                 <li key={i} className="flex items-center gap-3 text-xs font-bold text-slate-700">
                                                     <Icon name="check-circle" size={16} className="text-blue-600" /> {p}
@@ -201,7 +232,7 @@
                         </div>
                     </section>
 
-                    {/* Calculadora "¿Qué armo?" */}
+                    {/* Selector "¿Qué armo?" */}
                     <section id="calculadora" className="py-24 bg-slate-50 px-6">
                         <div className="max-w-6xl mx-auto">
                             <div className="text-center mb-16">
@@ -261,10 +292,10 @@
                         <div className="max-w-7xl mx-auto relative z-10">
                             <div className="grid lg:grid-cols-2 gap-16 items-center">
                                 <div>
-                                    <h2 className="text-5xl font-black-italic italic tracking-tighter uppercase mb-8">El Spot: La Ribera</h2>
+                                    <h2 className="text-5xl font-black-italic italic uppercase mb-8">El Spot: La Ribera</h2>
                                     <div className="h-1.5 w-20 bg-blue-600 mb-10"></div>
                                     <p className="text-white/70 text-lg leading-relaxed mb-8">
-                                        Nuestra costa ofrece un entorno inmejorable para el aprendizaje. Contamos con una <strong>playa amplia</strong> diseñada para armar y despegar con total seguridad.
+                                        Nuestra costa ofrece un entorno inmejorable para el aprendizaje. Contamos con una <strong>playa amplia</strong> diseñada para armar y despegar con total seguridad, lejos de obstáculos.
                                     </p>
                                     <div className="grid sm:grid-cols-2 gap-8">
                                         <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
@@ -272,14 +303,14 @@
                                                 <Icon name="wind" size={24}/>
                                                 <h4 className="font-black uppercase text-xs tracking-widest">Vientos</h4>
                                             </div>
-                                            <p className="text-sm text-white/60">Navegamos con vientos predominantes del <strong>Sudeste</strong> y <strong>Noreste</strong>.</p>
+                                            <p className="text-sm text-white/60 leading-relaxed">Navegamos con vientos predominantes del <strong>Sudeste</strong> y <strong>Noreste</strong>. Condiciones constantes para progresar rápido.</p>
                                         </div>
                                         <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
                                             <div className="flex items-center gap-3 mb-4 text-blue-500">
                                                 <Icon name="info" size={24}/>
                                                 <h4 className="font-black uppercase text-xs tracking-widest">Mareas</h4>
                                             </div>
-                                            <p className="text-sm text-white/60">Aguas bajas que facilitan el aprendizaje y brindan confianza al alumno.</p>
+                                            <p className="text-sm text-white/60 leading-relaxed">Aguas bajas que permiten al alumno <strong>hacer pie</strong> en todo momento, brindando máxima confianza.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -299,11 +330,11 @@
                                     {q: "¿Necesito equipo propio?", a: "No, en Quilmes Kite te damos todo: vela, tabla, arnés, chaleco y casco con radio."},
                                     {
                                         q: "¿Cuándo son las clases?", 
-                                        a: "Dependemos 100% del viento. Te avisamos por WhatsApp cuando las condiciones son óptimas. Además, los días que no sople, tendremos clases teóricas y juntadas entre alumnos para fortalecer la comunidad."
+                                        a: "Dependemos 100% del viento. Te avisamos por WhatsApp cuando las condiciones son óptimas. Además, los días que no sople, tendremos clases teóricas y juntadas entre alumnos para fortalecer la comunidad y aprender sobre el equipo y meteorología."
                                     },
-                                    {q: "¿Es peligroso?", a: "Para nada. Contamos con equipos de última generación con sistemas de seguridad redundantes e instructores certificados."}
+                                    {q: "¿Es peligroso?", a: "Para nada. Contamos con equipos de última generación con sistemas de seguridad redundantes e instructores certificados que te guiarán paso a paso."}
                                 ].map((item, i) => (
-                                    <div key={i} className="border border-slate-100 rounded-3xl p-6 bg-white shadow-sm">
+                                    <div key={i} className="border border-slate-100 rounded-3xl p-6 bg-white shadow-sm hover:border-blue-200 transition-colors">
                                         <button onClick={() => setActiveFaq(activeFaq === i ? null : i)} className="flex justify-between items-center w-full text-left font-bold text-lg group">
                                             <span className="group-hover:text-blue-600 transition-colors">{item.q}</span>
                                             <Icon name="chevron-down" className={`transition-transform duration-300 ${activeFaq === i ? 'rotate-180 text-blue-600' : ''}`} />
@@ -316,26 +347,31 @@
                     </section>
 
                     {/* Footer */}
-                    <footer className="py-24 bg-slate-900 text-white px-6">
-                        <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-16">
+                    <footer className="py-24 bg-slate-900 text-white px-6 border-t border-white/5">
+                        <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-16 text-center md:text-left">
                             <div className="lg:col-span-2">
-                                <div className="flex items-center space-x-[2px] mb-8">
-                                    <span className="text-4xl font-black-italic italic tracking-tighter">Q</span>
-                                    <span className="text-4xl font-black-italic italic tracking-tighter text-blue-500">K</span>
+                                <div className="flex items-center space-x-[2px] mb-8 justify-center md:justify-start">
+                                    <QKSymbol className="h-12 w-24" colorQ="white" />
                                 </div>
                                 <h3 className="text-xl font-black uppercase italic mb-6">Quilmes Kitesurf</h3>
-                                <p className="text-slate-400 max-w-sm mb-8">Escuela abierta a todas las generaciones. El río es nuestro, el viento es tuyo.</p>
-                                <div className="flex gap-4">
-                                    <a href="https://www.instagram.com/riohaus.club/" target="_blank" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-blue-600 transition-all"><Icon name="instagram" size={20}/></a>
-                                    <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-blue-600 transition-all"><Icon name="facebook" size={20}/></a>
+                                <p className="text-slate-400 max-w-sm mb-8 mx-auto md:mx-0">Escuela abierta a todas las generaciones. El río es nuestro, el viento es tuyo.</p>
+                                <div className="flex gap-4 justify-center md:justify-start">
+                                    <a href={IG_LINK} target="_blank" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-blue-600 transition-all shadow-lg"><Icon name="instagram" size={20}/></a>
+                                    <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-blue-600 transition-all shadow-lg"><Icon name="facebook" size={20}/></a>
                                 </div>
                             </div>
                             <div>
                                 <h4 className="font-black uppercase text-[10px] mb-8 text-slate-500 tracking-widest">Contacto</h4>
                                 <ul className="space-y-4 text-sm font-bold">
-                                    <li className="flex items-center gap-3"><Icon name="phone" size={16} className="text-blue-500"/> +54 9 11 XXXX-XXXX</li>
-                                    <li className="flex items-center gap-3"><Icon name="mail" size={16} className="text-blue-500"/> hola@quilmeskite.com</li>
-                                    <li className="flex items-start gap-3"><Icon name="map-pin" size={16} className="text-blue-500"/> Av. Cervantes, Ribera de Quilmes</li>
+                                    <li className="flex items-center gap-3 justify-center md:justify-start italic text-white hover:text-blue-400 transition-colors">
+                                        <Icon name="phone" size={16} className="text-blue-500"/> +54 9 11 3355 0302
+                                    </li>
+                                    <li className="flex items-center gap-3 justify-center md:justify-start italic text-white hover:text-blue-400 transition-colors">
+                                        <Icon name="mail" size={16} className="text-blue-500"/> info@quilmeskitesurf.com.ar
+                                    </li>
+                                    <li className="flex items-start gap-3 justify-center md:justify-start italic text-white">
+                                        <Icon name="map-pin" size={16} className="text-blue-500"/> Av. Cervantes y Rivadavia,<br/>Ribera de Quilmes
+                                    </li>
                                 </ul>
                             </div>
                             <div>
@@ -353,7 +389,7 @@
                     </footer>
 
                     {/* Botón WhatsApp */}
-                    <a href={whatsappLink} target="_blank" className="fixed bottom-8 right-8 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50">
+                    <a href={whatsappLink} target="_blank" className="fixed bottom-8 right-8 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 flex items-center justify-center">
                         <Icon name="message-circle" size={24} />
                     </a>
                 </div>
