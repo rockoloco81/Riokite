@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rio Kite - Aprendé a tu ritmo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Inter:wght@400;500;700;900&family=Ms+Madi&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .font-black-italic { font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; }
+        .font-signature { font-family: 'Ms Madi', cursive; }
+        .text-rio-blue { color: #00529F; }
+        .bg-rio-blue { background-color: #00529F; }
+        .grayscale-hover { filter: grayscale(100%); transition: all 0.6s ease; }
+        .grayscale-hover:hover { filter: grayscale(0%); transform: scale(1.02); }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        input[type=range] { accent-color: #00529F; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const faqsData = [
+            { q: "¿Necesito experiencia previa o mucha fuerza física?", a: "No, el kitesurf es 100% técnica y apto para todos. En Rio Kite te enseñamos desde cero, adaptando el equipo a tu contextura física." },
+            { q: "¿Es peligroso aprender por mi cuenta?", a: "Sí, es un deporte de riesgo sin protocolos. Priorizamos la seguridad con equipos de última generación y comunicación por radio." },
+            { q: "¿Cuáles son los requisitos mínimos?", a: "Saber nadar básico y pesar más de 40 kilos. No hay límite de edad, ¡solo ganas!" },
+            { q: "¿Cuánto tiempo lleva aprender?", a: "Cada uno tiene su ritmo. El Módulo de Iniciación de 6 horas da las bases clave para tu autonomía." },
+            { q: "¿El curso incluye el equipo?", a: "Sí, proveemos todo: kites, tablas, arneses, chalecos y cascos. Solo traé protector solar y toalla." },
+            { q: "¿Cómo controlo la potencia del viento?", a: "Usamos diferentes medidas de kite según tu peso y la fuerza del viento. Siempre tenés el control total." },
+            { q: "¿Es necesario reservar?", a: "Sí, trabajamos con reserva previa para asegurar las mejores condiciones de viento para tu clase." }
+        ];
+
+        const BrandLogo = ({ light = false, className = "" }) => (
+            <div className={`flex items-center gap-3 ${className}`}>
+                <div className="flex flex-col items-center leading-none">
+                    <span className="text-rio-blue font-signature text-4xl select-none -mb-2">Rio</span>
+                    <div className="flex items-center select-none">
+                        <span className={light ? "text-white font-signature text-5xl" : "text-[#1A1A1A] font-signature text-5xl"}>Haus</span>
+                        <span className="text-rio-blue font-signature text-3xl mx-1">&</span>
+                        <span className={light ? "text-white font-signature text-5xl" : "text-[#1A1A1A] font-signature text-5xl"}>Kite</span>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const KiteCalculator = () => {
+            const [selectedBrand, setSelectedBrand] = useState("North");
+            const [selectedModel, setSelectedModel] = useState("Reach");
+            const [weight, setWeight] = useState(75);
+            const [wind, setWind] = useState(18);
+
+            const brands = {
+                "North": ["Reach", "Orbit", "Carve", "Pulse"],
+                "Duotone": ["Rebel SLS", "Evo SLS", "Dice SLS", "Neo SLS"],
+                "Core": ["XR8", "Nexus 3"]
+            };
+
+            const calculateKiteSize = () => {
+                const w = parseInt(wind);
+                if (w < 10) return "Poco viento";
+                if (w > 35) return "Extremo";
+                let baseSize = (weight / wind) * 2.2;
+                return Math.round(baseSize) + "m²";
+            };
+
+            return (
+                <div className="bg-white rounded-[50px] p-8 md:p-12 shadow-2xl border border-slate-100 max-w-2xl mx-auto -mt-24 relative z-20">
+                    <h3 className="text-2xl font-black-italic uppercase mb-8 text-center uppercase italic">Calculadora de Kite</h3>
+                    <div className="grid grid-cols-2 gap-4 mb-10">
+                        <select value={selectedBrand} onChange={(e) => {setSelectedBrand(e.target.value); setSelectedModel(brands[e.target.value][0]);}} className="bg-slate-50 p-4 rounded-2xl font-bold text-sm outline-none border-2 border-transparent focus:border-rio-blue">
+                            {Object.keys(brands).map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} className="bg-slate-50 p-4 rounded-2xl font-bold text-sm outline-none border-2 border-transparent focus:border-rio-blue">
+                            {brands[selectedBrand].map(m => <option key={m} value={m}>{m}</option>)}
+                        </select>
+                    </div>
+                    <div className="space-y-8">
+                        <input type="range" min="40" max="120" value={weight} onChange={(e) => setWeight(e.target.value)} className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
+                        <div className="text-center">
+                            <div className="text-7xl font-black-italic text-[#1A1A1A]">{calculateKiteSize()}</div>
+                            <p className="text-[10px] uppercase font-bold text-slate-400 mt-4 italic tracking-widest">Recomendado para {weight}kg / {wind} kts</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [activeFaq, setActiveFaq] = useState(null);
+            const whatsappLink = "https://wa.me/5491132619424";
+            const instagramLink = "https://www.instagram.com/riohauskite/";
+
+            useEffect(() => { if(window.lucide) window.lucide.createIcons(); }, [activeFaq, isMenuOpen]);
+
+            const cursos = [
+                { titulo: "Bautismo", nivel: "Nivel 1", duracion: "3 horas", puntos: ["Ventana de viento", "Sistemas de seguridad", "Control en tierra"] },
+                { titulo: "Iniciación", nivel: "Nivel 1+2", duracion: "6 horas", puntos: ["Bodydrag completo", "Waterstart", "Primeros metros"] },
+                { titulo: "Pro", nivel: "Nivel 3", duracion: "A medida", puntos: ["Ceñida técnica", "Transiciones", "Primeros saltos"] }
+            ];
+
+            return (
+                <div className="min-h-screen bg-white text-[#1A1A1A]">
+                    {/* NAV */}
+                    <nav className="fixed w-full z-50 bg-white/95 border-b h-24 flex items-center px-6">
+                        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+                            <BrandLogo />
+                            <div className="hidden lg:flex gap-8 font-black uppercase text-[10px] tracking-widest text-slate-400 items-center">
+                                <a href="#proceso" className="hover:text-rio-blue transition-colors">Proceso</a>
+                                <a href="#cursos" className="hover:text-rio-blue transition-colors">Cursos</a>
+                                <a href="#galeria" className="hover:text-rio-blue transition-colors">Galería</a>
+                                <a href="#faq" className="hover:text-rio-blue transition-colors">Dudas</a>
+                                <a href={
