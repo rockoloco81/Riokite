@@ -4,54 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rio Kite - Aprendé a tu ritmo</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & Babel CDNs -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Inter:wght@400;500;700;900&family=Ms+Madi&display=swap');
-        
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         .font-black-italic { font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; }
-        .font-black { font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: normal; }
         .font-signature { font-family: 'Ms Madi', cursive; }
-        
-        /* Color Principal Azul Rio Kite */
         .text-rio-blue { color: #00529F; }
         .bg-rio-blue { background-color: #00529F; }
-        .border-rio-blue { border-color: #00529F; }
-
-        /* Efecto de Blanco y Negro a Color */
-        .grayscale-hover { 
-            filter: grayscale(100%); 
-            transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .grayscale-hover:hover { 
-            filter: grayscale(0%); 
-            transform: scale(1.02); 
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Custom input range styling */
-        input[type=range] {
-            accent-color: #00529F;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+        .grayscale-hover { filter: grayscale(100%); transition: all 0.6s ease; }
+        .grayscale-hover:hover { filter: grayscale(0%); transform: scale(1.02); }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -60,31 +28,30 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        /**
-         * BrandLogo Component
-         * Firma Signature Rio Kite (H y K integradas)
-         */
-        const BrandLogo = ({ light = false, className = "" }) => {
-            const primary = light ? '#FFFFFF' : '#1A1A1A';
-            const blue = '#00529F';
-            
-            return (
-                <div className={`flex items-center gap-3 ${className}`}>
-                    <div className="flex flex-col items-center leading-none">
-                        <span style={{ color: blue }} className="font-signature text-4xl select-none -mb-2">Rio</span>
-                        <div className="flex items-center select-none">
-                            <span style={{ color: primary }} className="font-signature text-5xl">Haus</span>
-                            <span style={{ color: blue }} className="font-signature text-3xl mx-1">&</span>
-                            <span style={{ color: primary }} className="font-signature text-5xl">Kite</span>
-                        </div>
+        // DATA - Movida afuera para mejor organización
+        const faqsData = [
+            { q: "¿Necesito experiencia previa o mucha fuerza física?", a: "No, el kitesurf es 100% técnica y apto para todos. En Rio Kite te enseñamos desde cero, adaptando el equipo a tu contextura física." },
+            { q: "¿Es peligroso aprender por mi cuenta?", a: "Sí, es un deporte de riesgo sin protocolos. Priorizamos la seguridad con equipos de última generación y comunicación por radio." },
+            { q: "¿Cuáles son los requisitos mínimos?", a: "Saber nadar básico y pesar más de 40 kilos. No hay límite de edad, ¡solo ganas!" },
+            { q: "¿Cuánto tiempo lleva aprender?", a: "Cada uno tiene su ritmo. El Módulo de Iniciación de 6 horas da las bases, pero la autonomía real depende de la práctica personalizada." },
+            { q: "¿El curso incluye el equipo?", a: "Sí, proveemos todo: kites, tablas, arneses, chalecos y cascos. Solo traé protector solar y toalla." },
+            { q: "¿Cómo controlo la potencia del viento?", a: "Usamos diferentes medidas de kite según tu peso y la fuerza del viento. Siempre tenés el control total." },
+            { q: "¿Hay que reservar?", a: "Sí, trabajamos con reserva previa para asegurar las mejores condiciones de viento para tu clase." }
+        ];
+
+        const BrandLogo = ({ light = false, className = "" }) => (
+            <div className={`flex items-center gap-3 ${className}`}>
+                <div className="flex flex-col items-center leading-none">
+                    <span className="text-rio-blue font-signature text-4xl -mb-2">Rio</span>
+                    <div className="flex items-center">
+                        <span className={light ? "text-white font-signature text-5xl" : "text-[#1A1A1A] font-signature text-5xl"}>Haus</span>
+                        <span className="text-rio-blue font-signature text-3xl mx-1">&</span>
+                        <span className={light ? "text-white font-signature text-5xl" : "text-[#1A1A1A] font-signature text-5xl"}>Kite</span>
                     </div>
                 </div>
-            );
-        };
+            </div>
+        );
 
-        /**
-         * Calculadora de Equipo con Selección Completa de Marca y Modelo
-         */
         const KiteCalculator = () => {
             const [selectedBrand, setSelectedBrand] = useState("North");
             const [selectedModel, setSelectedModel] = useState("Reach");
@@ -92,96 +59,35 @@
             const [wind, setWind] = useState(18);
 
             const brands = {
-                "North": ["Reach", "Orbit", "Carve", "Pulse"],
-                "Duotone": ["Rebel SLS", "Evo SLS", "Dice SLS", "Neo SLS"],
-                "Core": ["XR8", "Nexus 3", "GTS6", "Section 4"],
-                "F-One": ["Bandit", "Bullit", "Breeze", "Trigger"],
-                "Cabrinha": ["Switchblade", "Moto X", "Drifter", "Contra"],
-                "Slingshot": ["Rally", "Machine", "Dice", "Code"],
-                "Eleveight": ["RS", "FS", "OS", "WS"],
-                "Naish": ["Pivot", "Dash", "Torch", "Triad"],
-                "Airush": ["Lithium", "Union", "Session", "Lift"],
-                "Reedin": ["SuperModel HTF"]
+                "North": ["Reach", "Orbit", "Carve"],
+                "Duotone": ["Rebel SLS", "Evo SLS", "Neo SLS"],
+                "Core": ["XR8", "Nexus 3"]
             };
 
             const calculateKiteSize = () => {
                 const w = parseInt(wind);
-                if (w < 10) return "Muy poco viento";
-                if (w > 35) return "Viento extremo";
-                
-                // Ajuste base según peso y viento
+                if (w < 10) return "Poco viento";
+                if (w > 35) return "Extremo";
                 let baseSize = (weight / wind) * 2.2;
-                
-                // Ajuste técnico por performance del modelo
-                // Alas de 5 costillas o Big Air (Orbit, Rebel, XR, Machine) cargan más potencia
-                const bigAirModels = ["Orbit", "Rebel SLS", "XR8", "Machine", "Bullit", "Lift", "FS"];
-                const waveLightModels = ["Neo SLS", "Section 4", "Breeze", "OS", "WS", "Drifter", "Carve"];
-
-                if (bigAirModels.includes(selectedModel)) baseSize *= 0.90; // Necesitas menos m2 por su eficiencia
-                if (waveLightModels.includes(selectedModel)) baseSize *= 1.10; // Necesitas un poco más por su ligereza/deriva
-
                 return Math.round(baseSize) + "m²";
             };
 
             return (
                 <div className="bg-white rounded-[50px] p-8 md:p-12 shadow-2xl border border-slate-100 max-w-2xl mx-auto -mt-24 relative z-20">
-                    <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-8 text-center text-[#1A1A1A]">Calculadora de Kite</h3>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2 text-rio-blue">Seleccionar Marca</label>
-                            <select 
-                                value={selectedBrand}
-                                onChange={(e) => {
-                                    setSelectedBrand(e.target.value);
-                                    setSelectedModel(brands[e.target.value][0]);
-                                }}
-                                className="w-full bg-slate-50 border-2 border-transparent focus:border-[#00529F] rounded-2xl p-4 font-bold text-sm outline-none transition-all"
-                            >
-                                {Object.keys(brands).map(b => <option key={b} value={b}>{b}</option>)}
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2 text-rio-blue">Modelo del Ala</label>
-                            <select 
-                                value={selectedModel}
-                                onChange={(e) => setSelectedModel(e.target.value)}
-                                className="w-full bg-slate-50 border-2 border-transparent focus:border-[#00529F] rounded-2xl p-4 font-bold text-sm outline-none transition-all"
-                            >
-                                {brands[selectedBrand].map(m => <option key={m} value={m}>{m}</option>)}
-                            </select>
-                        </div>
+                    <h3 className="text-2xl font-black-italic uppercase mb-8 text-center">Calculadora de Kite</h3>
+                    <div className="grid grid-cols-2 gap-4 mb-10">
+                        <select value={selectedBrand} onChange={(e) => {setSelectedBrand(e.target.value); setSelectedModel(brands[e.target.value][0]);}} className="bg-slate-50 p-4 rounded-2xl font-bold">
+                            {Object.keys(brands).map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} className="bg-slate-50 p-4 rounded-2xl font-bold">
+                            {brands[selectedBrand].map(m => <option key={m} value={m}>{m}</option>)}
+                        </select>
                     </div>
-
-                    <div className="space-y-10">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center px-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Peso del Rider</label>
-                                <span className="font-bold text-xl text-rio-blue">{weight} kg</span>
-                            </div>
-                            <input 
-                                type="range" min="40" max="120" value={weight} 
-                                onChange={(e) => setWeight(e.target.value)}
-                                className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center px-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Viento en el Spot</label>
-                                <span className="font-bold text-xl text-rio-blue">{wind} nudos</span>
-                            </div>
-                            <input 
-                                type="range" min="8" max="40" value={wind} 
-                                onChange={(e) => setWind(e.target.value)}
-                                className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-                        <div className="pt-8 border-t border-slate-50 text-center">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#00529F] mb-2 italic">Medida Recomendada para {selectedBrand} {selectedModel}</p>
-                            <div className="text-7xl font-black italic tracking-tighter uppercase text-[#1A1A1A]">{calculateKiteSize()}</div>
-                            <p className="text-[9px] text-slate-400 mt-6 uppercase font-bold tracking-widest italic leading-relaxed px-10">
-                                * Cálculo basado en la eficiencia aerodinámica del modelo {selectedModel}. Consultá siempre con un instructor local.
-                            </p>
+                    <div className="space-y-8">
+                        <input type="range" min="40" max="120" value={weight} onChange={(e) => setWeight(e.target.value)} className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#00529F]" />
+                        <div className="text-center">
+                            <div className="text-7xl font-black-italic text-[#1A1A1A]">{calculateKiteSize()}</div>
+                            <p className="text-[10px] uppercase font-bold text-slate-400 mt-4">Medida para {weight}kg a {wind} nudos</p>
                         </div>
                     </div>
                 </div>
@@ -193,217 +99,69 @@
             const [activeFaq, setActiveFaq] = useState(null);
             const whatsappLink = "https://wa.me/5491132619424";
 
-            const imgDemo = {
-                hero: "imagenes/hero.jpg",
-                galeria1: "imagenes/galeria1.jpg",
-                galeria2: "imagenes/galeria2.jpg",
-                galeria3: "imagenes/galeria3.jpg",
-                galeria4: "imagenes/galeria4.jpg",
-                spot: "imagenes/spot.jpg"
-            };
+            useEffect(() => { lucide.createIcons(); }, []);
 
             const cursos = [
-                { titulo: "Bautismo", nivel: "Nivel 1", descripcion: "Tu primer contacto real. Entendé el viento y sentí la tracción.", duracion: "2 horas", puntos: ["Seguridad básica", "Control en tierra", "Ingreso al agua"] },
-                { titulo: "Curso de Iniciación", nivel: "Nivel 1+2", descripcion: "El camino hacia la autonomía. Clases personalizadas.", duracion: "9 horas (3 clases)", puntos: ["Bodydrag completo", "Waterstart", "Navegación autónoma"] },
-                { titulo: "Perfeccionamiento", nivel: "Nivel Pro", descripcion: "Mejorá tu técnica, ceñida o aprendé tus primeros saltos.", duracion: "A medida", puntos: ["Optimización de ceñida", "Introducción al salto", "Transiciones"] }
+                { titulo: "Bautismo", nivel: "Nivel 1", duracion: "3 horas", puntos: ["Ventana de viento", "Seguridad Quick Release", "Control en tierra"] },
+                { titulo: "Iniciación", nivel: "Nivel 1+2", duracion: "6 horas", puntos: ["Bodydrag completo", "Waterstart", "Primeros metros"] },
+                { titulo: "Pro", nivel: "Nivel 3", duracion: "A medida", puntos: ["Ceñida técnica", "Transiciones", "Primeros saltos"] }
             ];
-
-            const faqs = [
-                { q: "¿Necesito equipo propio?", a: "No, en nuestra escuela proveemos todo el equipo necesario: kites ,tablas, arneses, chalecos y cascos con radio BB Talkin'." },
-                { q: "¿Es necesario estar en forma?", a: "No se requiere condición atlética especial. El kite es técnica y control. Si podés caminar y nadar un poco, podés aprender." },
-                { q: "¿Hay límites de edad?", a: "Recibimos alumnos desde +40 kilos. No hay límite máximo; tenemos programas adaptados para todas las generaciones." }
-            ];
-
-            useEffect(() => {
-                lucide.createIcons();
-            }, []);
-
-            const NavItem = ({ href, children }) => (
-                <a 
-                    href={href} 
-                    className="hover:text-[#00529F] transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    {children}
-                </a>
-            );
 
             return (
-                <div className="min-h-screen bg-white text-[#1A1A1A]">
-                    {/* Navegación Fija */}
-                    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 h-24 flex items-center px-6">
+                <div className="min-h-screen bg-white">
+                    <nav className="fixed w-full z-50 bg-white/95 border-b h-24 flex items-center px-6">
                         <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
                             <BrandLogo />
-                            
-                            <div className="hidden lg:flex gap-10 text-[11px] font-black uppercase tracking-widest text-slate-400">
-                                <NavItem href="#proceso">Proceso</NavItem>
-                                <NavItem href="#spot">El Spot</NavItem>
-                                <NavItem href="#cursos">Cursos</NavItem>
-                                <NavItem href="#galeria">Galería</NavItem>
-                                <NavItem href="#faq">Dudas</NavItem>
+                            <div className="hidden lg:flex gap-8 font-black uppercase text-[10px] tracking-widest text-slate-400">
+                                <a href="#cursos">Cursos</a>
+                                <a href="#faq">Dudas</a>
                             </div>
-
-                            <div className="flex items-center gap-4">
-                                <a href={whatsappLink} target="_blank" className="hidden sm:flex bg-rio-blue text-white px-8 py-4 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all shadow-lg">
-                                    Reservar Clase
-                                </a>
-                                <button 
-                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                    className="lg:hidden p-2 text-slate-600 hover:text-[#00529F]"
-                                >
-                                    <i data-lucide={isMenuOpen ? "x" : "menu"} className="w-8 h-8"></i>
-                                </button>
-                            </div>
+                            <a href={whatsappLink} className="bg-rio-blue text-white px-6 py-3 rounded-full text-[10px] font-black uppercase">Reservar</a>
                         </div>
                     </nav>
 
-                    {/* Menú Mobile */}
-                    {isMenuOpen && (
-                        <div className="fixed inset-0 z-[40] bg-white pt-32 px-10 lg:hidden animate-in slide-in-from-top duration-300">
-                            <div className="flex flex-col gap-10 text-4xl font-black italic uppercase tracking-tighter">
-                                <NavItem href="#proceso">Proceso</NavItem>
-                                <NavItem href="#spot">El Spot</NavItem>
-                                <NavItem href="#cursos">Cursos</NavItem>
-                                <NavItem href="#galeria">Galería</NavItem>
-                                <NavItem href="#faq">Dudas</NavItem>
-                                <a href={whatsappLink} className="text-[#00529F] mt-10 text-2xl italic font-black">WhatsApp 🤙</a>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Hero Section */}
-                    <section className="relative pt-44 pb-32 lg:pt-56 lg:pb-48 overflow-hidden px-6">
-                        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+                    <section className="pt-44 pb-32 px-6">
+                        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
                             <div className="fade-in-up">
-                                <a href="https://www.instagram.com/riohaus.club/" target="_blank" className="inline-flex items-center gap-2 bg-slate-50 border border-slate-100 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 text-[#00529F] hover:bg-[#00529F] hover:text-white transition-all group">
-                                    <i data-lucide="instagram" className="w-4 h-4 group-hover:text-white"></i> Sede oficial: RioHaus Club
-                                </a>
-                                <h1 className="text-7xl md:text-8xl font-black-italic tracking-tighter leading-[0.8] mb-10 uppercase italic">
-                                    APRENDÉ <br />A TU RITMO.
-                                </h1>
-                                <p className="text-xl text-slate-500 mb-14 max-w-md font-medium leading-relaxed italic underline decoration-[#00529F]/20 decoration-2 underline-offset-8">
-                                    Enseñamos Kitesurf en la Ribera de Quilmes con seguridad, profsionalismo y equipos profesionales de última generación.
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-5">
-                                    <a href="#cursos" className="bg-rio-blue text-white px-12 py-6 rounded-full font-black uppercase tracking-widest text-xs shadow-2xl flex items-center justify-center gap-3 hover:opacity-90 transition-all">
-                                        Ver Cursos <i data-lucide="arrow-right" className="w-4 h-4"></i>
-                                    </a>
-                                    <a href="#spot" className="border-2 border-slate-200 px-12 py-6 rounded-full font-black uppercase tracking-widest text-xs hover:bg-slate-50 text-center">Conocé el Spot</a>
-                                </div>
+                                <h1 className="text-6xl md:text-8xl font-black-italic uppercase leading-none mb-6">EL RÍO ES<br/>TUYO.</h1>
+                                <p className="text-slate-500 max-w-sm mb-10">Escuela oficial en la Ribera de Quilmes. Equipos Duotone y North 2024/25.</p>
+                                <a href="#cursos" className="bg-rio-blue text-white px-10 py-5 rounded-full font-black uppercase text-xs inline-block">Empezar ahora</a>
                             </div>
-                            <div className="relative">
-                                {/* Hero Image 4:3 */}
-                                <div className="aspect-[4/3] bg-slate-100 rounded-[80px] overflow-hidden shadow-2xl border-8 border-white flex items-center justify-center">
-                                    <img src={imgDemo.hero} className="w-full h-full object-cover grayscale-hover" alt="Kitesurf Quilmes" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
-                                </div>
+                            <div className="rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 aspect-video">
+                                <img src="imagenes/hero.jpg" className="w-full h-full object-cover grayscale-hover" alt="Kite" />
                             </div>
                         </div>
                     </section>
 
-                    {/* Pilares */}
-                    <section id="proceso" className="py-24 bg-slate-50 px-6 pb-48">
-                        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+                    <KiteCalculator />
+
+                    <section id="cursos" className="py-32 px-6 bg-slate-50">
+                        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+                            {cursos.map((c, i) => (
+                                <div key={i} className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 hover:scale-105 transition-all">
+                                    <span className="text-rio-blue font-black text-[10px] uppercase tracking-widest">{c.nivel}</span>
+                                    <h3 className="text-3xl font-black-italic uppercase my-4">{c.titulo}</h3>
+                                    <ul className="space-y-3 mb-8">
+                                        {c.puntos.map((p, idx) => <li key={idx} className="text-[11px] font-bold uppercase text-slate-500 flex gap-2">✓ {p}</li>)}
+                                    </ul>
+                                    <div className="text-xs font-black">{c.duracion}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section id="faq" className="py-32 px-6 bg-[#1A1A1A] text-white">
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-4xl font-black-italic uppercase text-center mb-16">Preguntas Frecuentes</h2>
                             <div className="space-y-4">
-                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm text-rio-blue"><i data-lucide="shield-check" className="w-8 h-8"></i></div>
-                                <h3 className="text-xl font-black uppercase italic tracking-tighter">Seguridad Total</h3>
-                                <p className="text-sm text-slate-500 leading-relaxed font-medium">Equipos con sistemas de eyección redundantes y cascos con radio BB Talkin' para comunicación directa.</p>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm text-rio-blue"><i data-lucide="users" className="w-8 h-8"></i></div>
-                                <h3 className="text-xl font-black uppercase italic tracking-tighter">Sin límites</h3>
-                                <p className="text-sm text-slate-500 leading-relaxed font-medium">Desde +40 Kg en adelante. Adaptamos la pedagogía para que aprendas a tu ritmo y sin presiones.</p>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm text-rio-blue"><i data-lucide="waves" className="w-8 h-8"></i></div>
-                                <h3 className="text-xl font-black uppercase italic tracking-tighter">Spot Único</h3>
-                                <p className="text-sm text-slate-500 leading-relaxed font-medium">Navegamos en la Ribera de Quilmes, un lugar con vientos constantes y aguas poco profundas.</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Calculadora */}
-                    <section className="px-6">
-                        <KiteCalculator />
-                    </section>
-
-                    {/* El Spot Detallado */}
-                    <section id="spot" className="py-40 bg-[#1A1A1A] text-white px-6 relative overflow-hidden">
-                        <div className="max-w-7xl mx-auto relative z-10">
-                            <div className="grid lg:grid-cols-2 gap-20 items-center">
-                                <div>
-                                    <h2 className="text-5xl font-black-italic italic tracking-tighter uppercase mb-8 leading-none">Vientos y Mareas:<br />La Ribera</h2>
-                                    <div className="h-1.5 w-24 bg-rio-blue mb-12"></div>
-                                    <p className="text-white/60 text-lg leading-relaxed mb-12 italic text-rio-blue font-bold">
-                                        Entender el río es el primer paso para dominar el kite. En Quilmes, aprovechamos las condiciones del estuario.
-                                    </p>
-                                    <div className="grid sm:grid-cols-2 gap-10">
-                                        <div className="bg-white/5 p-8 rounded-[40px] border border-white/10">
-                                            <div className="flex items-center gap-4 mb-5 text-rio-blue"><i data-lucide="wind" className="w-8 h-8"></i><h4 className="font-black uppercase text-xs tracking-widest text-white">Vientos</h4></div>
-                                            <p className="text-sm text-white/50 leading-relaxed">Predominan el <strong>Sudeste</strong> (ideal) y el <strong>Noreste</strong>. El viento <strong>Norte</strong> ofrece condiciones únicas.</p>
-                                        </div>
-                                        <div className="bg-white/5 p-8 rounded-[40px] border border-white/10">
-                                            <div className="flex items-center gap-4 mb-5 text-rio-blue"><i data-lucide="map" className="w-8 h-8"></i><h4 className="font-black uppercase text-xs tracking-widest text-white">Mareas</h4></div>
-                                            <p className="text-sm text-white/50 leading-relaxed">El Río es un estuario. Sus mareas dependen de los vientos del Atlántico, creando playones seguros.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="aspect-square bg-white/5 rounded-[80px] overflow-hidden border border-white/10 group shadow-2xl">
-                                    <img src={imgDemo.spot} className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-1000" alt="Spot Rio Kite" />
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Cursos */}
-                    <section id="cursos" className="py-32 bg-white px-6">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="mb-20 text-center lg:text-left">
-                                <h2 className="text-6xl font-black-italic italic tracking-tighter uppercase leading-none">Cursos a Medida</h2>
-                                <p className="text-rio-blue font-bold uppercase tracking-[0.3em] text-[10px] mt-4">Todo el equipo incluido</p>
-                            </div>
-                            <div className="grid md:grid-cols-3 gap-10">
-                                {cursos.map((curso, idx) => (
-                                    <div key={idx} className="bg-slate-50 border border-slate-100 rounded-[60px] p-12 shadow-sm hover:shadow-2xl transition-all group flex flex-col">
-                                        <div className="text-[10px] font-black uppercase tracking-widest text-rio-blue mb-8">{curso.nivel}</div>
-                                        <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-8 leading-none">{curso.titulo}</h3>
-                                        <p className="text-slate-500 text-sm font-medium mb-12 leading-relaxed italic">"{curso.descripcion}"</p>
-                                        <ul className="space-y-5 mb-14 flex-grow">
-                                            {curso.puntos.map((p, i) => (
-                                                <li key={i} className="flex items-start gap-4 text-[11px] font-black uppercase tracking-widest text-slate-700">
-                                                    <i data-lucide="check-circle-2" className="w-5 h-5 text-rio-blue shrink-0"></i> {p}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <div className="pt-10 border-t border-slate-200 flex items-center justify-between">
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{curso.duracion}</div>
-                                            <a href={whatsappLink} target="_blank" className="text-rio-blue font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:opacity-60 transition-colors">Consultar 🤙</a>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* FAQ */}
-                    <section id="faq" className="py-40 bg-[#1A1A1A] text-white px-6">
-                        <div className="max-w-4xl mx-auto">
-                            <div className="text-center mb-24">
-                                <h2 className="text-5xl font-black-italic italic tracking-tighter uppercase mb-6">Preguntas Frecuentes</h2>
-                                <p className="text-rio-blue font-black uppercase tracking-[0.4em] text-[10px]">Despejá todas tus dudas</p>
-                            </div>
-                            <div className="space-y-6">
-                                {faqs.map((faq, idx) => (
-                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden transition-all">
-                                        <button 
-                                            onClick={() => setActiveFaq(activeFaq === idx ? null : idx)} 
-                                            className="w-full p-10 flex items-center justify-between text-left hover:bg-white/10 transition-colors"
-                                        >
-                                            <span className="font-bold text-xl pr-10">{faq.q}</span>
-                                            <i data-lucide="chevron-down" className={`transition-transform duration-500 ${activeFaq === idx ? 'rotate-180 text-rio-blue' : ''}`}></i>
+                                {faqsData.map((faq, i) => (
+                                    <div key={i} className="border border-white/10 rounded-3xl overflow-hidden">
+                                        <button onClick={() => setActiveFaq(activeFaq === i ? null : i)} className="w-full p-6 text-left font-bold flex justify-between items-center hover:bg-white/5">
+                                            {faq.q}
+                                            <span className="text-rio-blue">{activeFaq === i ? '−' : '+'}</span>
                                         </button>
-                                        <div className={`transition-all duration-500 ${activeFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
-                                            <p className="p-10 pt-0 text-white/40 leading-relaxed font-medium border-t border-white/5 mt-5 pt-8 text-sm italic">{faq.a}</p>
+                                        <div className={`overflow-hidden transition-all duration-300 ${activeFaq === i ? 'max-h-40 p-6 pt-0' : 'max-h-0'}`}>
+                                            <p className="text-white/50 text-sm italic">{faq.a}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -411,43 +169,9 @@
                         </div>
                     </section>
 
-                    {/* Footer */}
-                    <footer className="py-32 bg-white border-t border-slate-100 px-6">
-                        <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-24">
-                            <div className="lg:col-span-2">
-                                <BrandLogo className="mb-12 scale-125 origin-left" />
-                                <p className="text-slate-400 max-w-sm font-medium leading-relaxed italic mb-10 text-lg">
-                                    "El río es nuestro, el viento es tuyo." Escuela oficial Rio Kite, Ribera de Quilmes.
-                                </p>
-                            </div>
-                            <div>
-                                <h4 className="font-black uppercase text-[10px] tracking-widest text-rio-blue mb-10">Navegación</h4>
-                                <ul className="space-y-6 text-sm font-bold">
-                                    <li><a href="#proceso" className="hover:text-rio-blue transition-colors">Proceso</a></li>
-                                    <li><a href="#spot" className="hover:text-rio-blue transition-colors">El Spot</a></li>
-                                    <li><a href="#cursos" className="hover:text-rio-blue transition-colors">Cursos</a></li>
-                                    <li><a href="#faq" className="hover:text-rio-blue transition-colors">Dudas</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 className="font-black uppercase text-[10px] tracking-widest text-rio-blue mb-10">Ubicación</h4>
-                                <p className="text-sm font-bold leading-relaxed mb-6 italic">Av. Cervantes, Ribera de Quilmes.<br />Dentro de RioHaus Club.</p>
-                            </div>
-                        </div>
-                        <div className="pt-20 mt-20 border-t border-slate-100 text-center">
-                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-200 italic">© 2026 Rio Kite // Identity & School </p>
-                        </div>
+                    <footer className="py-10 text-center text-[10px] font-black uppercase text-slate-300">
+                        © 2026 Rio Kite // Quilmes, Argentina
                     </footer>
-
-                    {/* WhatsApp Fijo */}
-                    <a 
-                        href={whatsappLink} 
-                        target="_blank" 
-                        className="fixed bottom-10 right-10 bg-[#25D366] text-white p-6 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all z-50 flex items-center gap-4 group"
-                    >
-                        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-black uppercase tracking-widest text-[10px] whitespace-nowrap">Chateá con nosotros</span>
-                        <i data-lucide="message-circle" className="w-7 h-7"></i>
-                    </a>
                 </div>
             );
         };
